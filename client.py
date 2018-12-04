@@ -40,6 +40,8 @@ while isrunning:
     print("2. Creer un compte")
     option = input()
 
+    send_msg(s,str(option))
+
     if (str(option) == "1"): # Se connecter
 
         # creation du socket et connexion a l’hote distant
