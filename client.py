@@ -33,9 +33,15 @@ destination = (args["address"], args["port"])
 print("Menu de connexion")
 print("1. Se connecter")
 print("2. Creer un compte")
-text = input()
+option = input()
 
-if (text == "1"): # Se connecter
+while ((str(option) != "1") or (str(option) != "2")):
+    print("Choix invalide. Veuillez sélectionner l'option 1 ou 2")
+    option = input()
+    if ((str(option) == "1") or (str(option) == "2")):
+        break
+
+if (str(option) == "1"): # Se connecter
 
     # creation du socket et connexion a l’hote distant
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -56,7 +62,7 @@ if (text == "1"): # Se connecter
     s.close()
 
 
-if (text == "2"): # mode client
+if (str(option) == "2"): # mode client
 
     destination = (args["address"], args["port"])
 
@@ -80,6 +86,3 @@ if (text == "2"): # mode client
 
     s.close()
 
-else:
-    print("Choisissez l'option 1 ou 2, SVP.")
-    s.close()
