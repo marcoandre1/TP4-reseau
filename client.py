@@ -33,9 +33,8 @@ destination = (args["address"], args["port"])
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect(destination)
 
-quitter = False
 isrunning = True
-while isrunning and not quitter:
+while isrunning:
     print("Menu de connexion")
     print("1. Se connecter")
     print("2. Creer un compte")
@@ -67,6 +66,8 @@ while isrunning and not quitter:
                 print("3. Statistiques")
                 print("4. Quitter")
                 optionMenu = input()
+                send_msg(s,str(optionMenu))
+
 
                 if (str(optionMenu) == "1"):
                     print("Envoie de courriels")

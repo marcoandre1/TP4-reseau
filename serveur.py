@@ -30,7 +30,6 @@ while isRunning:
     # s est un nouveau socket pour interagir avec le client
 
     option = recv_msg(s)
-    print (option)
 
     if(option == "1"):
         username = recv_msg(s)
@@ -43,14 +42,32 @@ while isRunning:
             if userfile.readline() == password:
                 send_msg(s,"Vous êtes connecté")
                 booleanresult = "True"
+                send_msg(s,booleanresult)
+
+                quitter = False
+
+                while (quitter == False):
+                    option2 = recv_msg(s)
+
+                    if (option2 == "1"):
+                        print("Envoie de courriels")
+                    if (option2 == "2"):
+                        print("Consultation de courriels")
+                    if (option2 == "3"):
+                        print("Statistiques")
+                    if (option2 == "4"):
+                        print("Quitter")
+                        quitter = True
 
             else:
                 send_msg(s,"Mauvais mot de passe")
+
             userfile.close()
         else:
             send_msg(s,"L'utilisateur n'existe pas")
+            send_msg(s,booleanresult)
 
-        send_msg(s,booleanresult)
+
 
     elif(option == "2"):
         username = recv_msg(s)
