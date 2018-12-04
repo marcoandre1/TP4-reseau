@@ -29,60 +29,53 @@ args = vars(parser.parse_args())
 # le socket aura besoin d’un tuple contenant l’adresse et le port
 destination = (args["address"], args["port"])
 
-# Menu démarrage client
-print("Menu de connexion")
-print("1. Se connecter")
-print("2. Creer un compte")
-option = input()
 
-while ((str(option) != "1") or (str(option) != "2")):
-    print("Choix invalide. Veuillez sélectionner l'option 1 ou 2")
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect(destination)
+
+isrunning = True
+while isrunning:
+    print("Menu de connexion")
+    print("1. Se connecter")
+    print("2. Creer un compte")
     option = input()
-    if ((str(option) == "1") or (str(option) == "2")):
-        break
 
-if (str(option) == "1"): # Se connecter
+    if (str(option) == "1"): # Se connecter
 
-    # creation du socket et connexion a l’hote distant
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect(destination)
+        # creation du socket et connexion a l’hote distant
 
-    username = input("Nom d'utilisateur : ")
-    if os.path.exists(os.getcwd()+"\\"+username):
-        password = getpass.getpass("Mot de passe : ")
-        userfile = open(os.getcwd()+"\\"+username+"\\config.txt","r")
-        if userfile.readline() == sha256(password.encode()).hexdigest():
-            print ("Vous êtes connecté")
-        else:
-            print ("Mauvais mot de passe")
-        userfile.close()
-    else:
-        print("L'utilisateur n'existe pas")
-
-    s.close()
-
-
-if (str(option) == "2"): # mode client
-
-    destination = (args["address"], args["port"])
-
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect(destination)
-
-    username = input("Nom d'utilisateur : ")
-    if os.path.exists(os.getcwd()+"\\"+username):
-        print("Cet utilisateur existe déjà")
-    else:
-        os.mkdir(os.getcwd()+"\\"+username)
-        password = getpass.getpass("Mot de passe : ")
-        if(any(i.isdigit() for i in password) and any(i.isalpha() for i in password) and len(password)>=6 and len(password)<=12):
-            userfile = open(os.getcwd()+"\\"+username+"\\config.txt","w")
-            userfile.write(sha256(password.encode()).hexdigest())
+        username = input("Nom d'utilisateur : ")
+        send_msg(s,username)
+        if os.path.exists(os.getcwd()+"\\"+username):
+            password = getpass.getpass("Mot de passe : ")
+            userfile = open(os.getcwd()+"\\"+username+"\\config.txt","r")
+            if userfile.readline() == sha256(password.encode()).hexdigest():
+                print ("Vous êtes connecté")
+            else:
+                print ("Mauvais mot de passe")
             userfile.close()
-            print ("Compte créé")
         else:
-            print("Le mot de passe doit contenir 6 à 12 caractères dont un chiffre et une lettre")
+            print("L'utilisateur n'existe pas")
 
 
-    s.close()
+    if (str(option) == "2"): # mode client
+
+        destination = (args["address"], args["port"])
+
+
+        username = input("Nom d'utilisateur : ")
+        if os.path.exists(os.getcwd()+"\\"+username):
+            print("Cet utilisateur existe déjà")
+        else:
+            os.mkdir(os.getcwd()+"\\"+username)
+            password = getpass.getpass("Mot de passe : ")
+            if(any(i.isdigit() for i in password) and any(i.isalpha() for i in password) and len(password)>=6 and len(password)<=12):
+                userfile = open(os.getcwd()+"\\"+username+"\\config.txt","w")
+                userfile.write(sha256(password.encode()).hexdigest())
+                userfile.close()
+                print ("Compte créé")
+            else:
+                print("Le mot de passe doit contenir 6 à 12 caractères dont un chiffre et une lettre")
+
+
 
