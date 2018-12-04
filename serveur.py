@@ -36,10 +36,13 @@ while isRunning:
         username = recv_msg(s)
         password = recv_msg(s)
 
+        booleanresult = "False"
+
         if os.path.exists(os.getcwd()+"\\"+username):
             userfile = open(os.getcwd()+"\\"+username+"\\config.txt","r")
             if userfile.readline() == password:
                 send_msg(s,"Vous êtes connecté")
+                booleanresult = "True"
 
             else:
                 send_msg(s,"Mauvais mot de passe")
@@ -47,6 +50,7 @@ while isRunning:
         else:
             send_msg(s,"L'utilisateur n'existe pas")
 
+        send_msg(s,booleanresult)
 
     elif(option == "2"):
         username = recv_msg(s)
