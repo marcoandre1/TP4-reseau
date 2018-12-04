@@ -3,7 +3,8 @@ import re
 import smtplib
 import socket
 import sys
-import socketUtil
+from socketUtil import *
+import os
 from email.mime.text import MIMEText
 
 # choisissez le port avec l’option -p
@@ -20,55 +21,46 @@ serversocket.bind(("localhost", port))
 serversocket.listen(5)
 print("Listening on port " + str(serversocket.getsockname()[1]))
 
-i = 0
+(s, address) = serversocket.accept()
+
 
 isRunning = True
 while isRunning:
     # un client se connecte au serveur
     # s est un nouveau socket pour interagir avec le client
-    (s, address) = serversocket.accept()
 
-    option = socketUtil.recv_msg(s)
+    option = recv_msg(s)
     print (option)
 
     if(option == "1"):
+        username = recv_msg(s)
+        password = recv_msg(s)
 
-        print("Connexion")
-        #Reception de courriel
-        #         # reception du courriel et verification qu’il est valide
-        # emailAddress = s.recv(1024).decode()
-        #
-        #
-        # while not re.search(r"^[^@]+@[^@]+\.[^@]+$", emailAddress):
-        #     msg = "Saisissez une adresse courriel valide : "
-        #     s.send(msg.encode())
-        #     emailAddress = s.recv(1024).decode()
-        #
-        # # creation du courriel
-        # courriel = MIMEText("Ce courriel a ete envoye par mon serveur de courriel")
-        # courriel["From"] = "exercice3@glo2000.ca"
-        # courriel["To"] = emailAddress
-        # courriel["Subject"] = "Exercice3"
-        #
-        # # envoi du courriel
-        # try:
-        #     smtpConnection = smtplib.SMTP(host="smtp.ulaval.ca", timeout=10)
-        #     smtpConnection.sendmail(courriel["From"], courriel["To"], courriel.as_string())
-        #     smtpConnection.quit()
-        #     msg = "Le courriel a bien ete envoye! "
-        #     s.send(msg.encode())
-        # except:
-        #     msg = "L’envoi n’a pas pu etre effectue. "
-        #     s.send(msg.encode())
-        #
-        # msg = "Au revoir!\n"
-        # s.send(msg.encode())
+        if os.path.exists(os.getcwd()+"\\"+username):
+            userfile = open(os.getcwd()+"\\"+username+"\\config.txt","r")
+            if userfile.readline() == password:
+                send_msg(s,"Vous êtes connecté")
+
+            else:
+                send_msg(s,"Mauvais mot de passe")
+            userfile.close()
+        else:
+            send_msg(s,"L'utilisateur n'existe pas")
 
 
     elif(option == "2"):
+        username = recv_msg(s)
+        password = recv_msg(s)
+
+        if os.path.exists(os.getcwd()+"\\"+username):
+            send_msg(s,"Cet utilisateur existe déjà")
+        else:
+            os.mkdir(os.getcwd()+"\\"+username)
+            userfile = open(os.getcwd()+"\\"+username+"\\config.txt","w")
+            userfile.write(password)
+            userfile.close()
+            send_msg(s,"Votre compte a été créé")
 
 
-        print("création d'utilisateur")
-
-
+#exit
     # s.close()
