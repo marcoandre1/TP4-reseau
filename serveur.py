@@ -88,7 +88,42 @@ while isRunning:
                             send_msg(s, msg3)
 
                     if (option2 == "2"):
-                        print("Consultation de courriels")
+                        objets = []
+                        for file in os.listdir(os.getcwd()+"\\"+username):
+                            if not file.startswith("config"):
+                                email = open(os.getcwd()+"\\"+username+"\\"+file)
+                                lines = email.readlines()
+                                objets.append(lines[2][10:-1])
+
+                        send_msg(s,str(len(objets)))
+
+                        for objet in objets:
+                            send_msg(s,objet)
+
+                        selectemail = eval(recv_msg(s))
+                        print (selectemail)
+
+                        for file in os.listdir(os.getcwd()+"\\"+username):
+                            if not file.startswith("config"):
+                                email = open(os.getcwd()+"\\"+username+"\\"+file)
+                                lines = email.readlines()
+                                if lines[2][10:-1] == objets[selectemail]:
+                                    send_msg(s,lines[0][12:-1])
+                                    send_msg(s,lines[1][10:-1])
+                                    send_msg(s,lines[2][10:-1])
+                                    #concatenate all remaining lines
+                                    body = ""
+                                    try:
+                                        for remainingline in lines[3:]:
+                                            body+=remainingline
+                                    except:
+                                        pass
+
+                                    send_msg(s,body)
+
+
+
+
                     if (option2 == "3"):
                         print("Statistiques")
                     if (option2 == "4"):
