@@ -45,8 +45,6 @@ while isrunning and not quitter:
 
     if (str(option) == "1"): # Se connecter
 
-        # creation du socket et connexion a l’hote distant
-
         username = input("Nom d'utilisateur : ")
         password = getpass.getpass("Mot de passe : ")
 
