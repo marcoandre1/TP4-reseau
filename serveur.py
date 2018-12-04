@@ -50,7 +50,43 @@ while isRunning:
                     option2 = recv_msg(s)
 
                     if (option2 == "1"):
-                        print("Envoie de courriels")
+                        mailfrom = recv_msg(s)
+                        rcptto = recv_msg(s)
+                        subject = recv_msg(s)
+                        text = recv_msg(s)
+
+                        # verification que c'est un courriel @reseauglo.ca
+                        if re.search(r"[@]reseauglo.ca", rcptto):
+                            mailto, domain = rcptto.split("@")
+                            if os.path.exists(os.getcwd()+"\\"+mailto):
+                                print("No function yet")
+                            else:
+                                os.mkdir(os.getcwd()+"\\"+"DESTERREUR")
+                                erreurfile = open(os.getcwd()+"\\"+"DESTERREUR"+"\\DESTERREUR.txt","a")
+                                erreurfile.write("From : " + mailfrom + "\n")
+                                erreurfile.write("To : " + rcptto + "\n")
+                                erreurfile.write("Subject : " + subject + "\n")
+                                erreurfile.write(text)
+                                erreurfile.close()
+
+                        # creation d’un objet courriel avec MIMEText
+                        msg = MIMEText(text)
+                        msg["From"] = mailfrom
+                        msg["To"] = rcptto
+                        msg["Subject"] = subject
+                    
+                        # envoi du courriel grace au protocole SMTP et au serveur de l’universite Laval
+                        try:
+                            smtpConnection = smtplib.SMTP(host="smtp.ulaval.ca", timeout=10)
+                            smtpConnection.sendmail(mailfrom, rcptto, msg.as_string())
+                            smtpConnection.quit()
+                            msg2 = "Le courriel a bien ete envoye! "
+                            send_msg(s, msg2)
+                            
+                        except:
+                            msg3 = "Le courriel n'a pas ete envoye! "
+                            send_msg(s, msg3)
+
                     if (option2 == "2"):
                         print("Consultation de courriels")
                     if (option2 == "3"):

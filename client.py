@@ -4,6 +4,9 @@
 import os
 import getpass
 from hashlib import sha256
+import smtplib
+from email.mime.text import MIMEText
+import re
 
 """Script Python qui implémente l'échange de clé de Diffie-Hellman à l'aide de sockets
     Mode serveur (exemple): python TP3-Q1.py -s -p 3333
@@ -70,7 +73,30 @@ while isrunning:
 
 
                 if (str(optionMenu) == "1"):
-                    print("Envoie de courriels")
+                    # remplissage des champs par l’utilisateur
+                    mailfrom = str(username) + "@ulaval.ca"
+                    send_msg(s, str(mailfrom))
+
+                    rcptto = input("Adresse de destination : ")
+                    # verification courriel est valide
+                    while not re.search(r"^[^@]+@[^@]+\.[^@]+$", rcptto):
+                        print("Saisissez une adresse courriel valide : ")
+                    send_msg(s, rcptto)
+
+                    subject = input("Sujet du message : ")
+                    send_msg(s, str(subject))
+
+                    print("Data : ")
+                    text = ""
+                    temp = input()
+                    while temp != ".":
+                        text += temp + "\n"
+                        temp = input()
+                    send_msg(s, str(text))
+
+                    response = recv_msg(s)
+                    print(response)
+
                 if (str(optionMenu) == "2"):
                     print("Consultation de courriels")
                 if (str(optionMenu) == "3"):
