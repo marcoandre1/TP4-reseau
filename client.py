@@ -73,6 +73,32 @@ while isrunning:
                     print("Envoie de courriels")
                 if (str(optionMenu) == "2"):
                     print("Consultation de courriels")
+                    nbobjets = eval(recv_msg(s))
+
+                    index = 1
+                    for i in range(nbobjets):
+                        objet = recv_msg(s)
+                        print (str(index) + ". " + objet)
+                        index +=1
+
+                    print("Sélectionnez un courriel")
+                    selectemail = str(eval(input())-1)
+
+                    send_msg(s,selectemail)
+
+                    # mailfrom = recv_msg(s)
+                    # mailto = recv_msg(s)
+                    # subject = recv_msg(s)
+                    # body = recv_msg(s)
+
+                    print(recv_msg(s))
+                    print(recv_msg(s))
+                    print(recv_msg(s))
+                    print(recv_msg(s))
+
+                    print("\nPress enter to exit")
+                    exit = input()
+
                 if (str(optionMenu) == "3"):
                     print("Statistiques")
                 if (str(optionMenu) == "4"):
