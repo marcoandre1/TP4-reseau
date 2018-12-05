@@ -49,6 +49,7 @@ while isRunning:
                 while (quitter == False):
                     option2 = recv_msg(s)
 
+                    # Envoi de courriels
                     if (option2 == "1"):
                         mailfrom = recv_msg(s)
                         rcptto = recv_msg(s)
@@ -59,15 +60,43 @@ while isRunning:
                         if re.search(r"[@]reseauglo.ca", rcptto):
                             mailto, domain = rcptto.split("@")
                             if os.path.exists(os.getcwd()+"\\"+mailto):
-                                print("No function yet")
+                                objets = []
+                                for file in os.listdir(os.getcwd()+"\\"+username):
+                                    if not file.startswith("config"):
+                                        email = open(os.getcwd()+"\\"+username+"\\"+file)
+                                        lines = email.readlines()
+                                        objets.append(lines[2][10:-1])
+
+                                userfile = open(os.getcwd()+"\\"+mailto+"\\"+str(len(objets) + 1)+".txt","w")
+                                userfile.write("From : " + mailfrom + "\n")
+                                userfile.write("To : " + rcptto + "\n")
+                                userfile.write("Subject : " + subject + "\n")
+                                userfile.write(text)
+                                userfile.close()
+
                             else:
-                                os.mkdir(os.getcwd()+"\\"+"DESTERREUR")
-                                erreurfile = open(os.getcwd()+"\\"+"DESTERREUR"+"\\DESTERREUR.txt","a")
-                                erreurfile.write("From : " + mailfrom + "\n")
-                                erreurfile.write("To : " + rcptto + "\n")
-                                erreurfile.write("Subject : " + subject + "\n")
-                                erreurfile.write(text)
-                                erreurfile.close()
+                                if os.path.exists(os.getcwd()+"\\"+"DESTERREUR"):
+                                    objetsErreurs = []
+                                    for file in os.listdir(os.getcwd()+"\\"+"DESTERREUR"):
+                                        if not file.startswith("config"):
+                                            email = open(os.getcwd()+"\\"+"DESTERREUR"+"\\"+file)
+                                            lines = email.readlines()
+                                            objetsErreurs.append(lines[2][10:-1])
+                                    erreurfile = open(os.getcwd()+"\\"+"DESTERREUR"+"\\"+str(len(objetsErreurs) + 1)+".txt","w")
+                                    erreurfile.write("From : " + mailfrom + "\n")
+                                    erreurfile.write("To : " + rcptto + "\n")
+                                    erreurfile.write("Subject : " + subject + "\n")
+                                    erreurfile.write(text)
+                                    erreurfile.close()
+
+                                else:
+                                    os.mkdir(os.getcwd()+"\\"+"DESTERREUR")
+                                    erreurfile = open(os.getcwd()+"\\"+"DESTERREUR"+"\\1.txt","w")
+                                    erreurfile.write("From : " + mailfrom + "\n")
+                                    erreurfile.write("To : " + rcptto + "\n")
+                                    erreurfile.write("Subject : " + subject + "\n")
+                                    erreurfile.write(text)
+                                    erreurfile.close()
 
                         # creation d’un objet courriel avec MIMEText
                         msg = MIMEText(text)
@@ -87,6 +116,7 @@ while isRunning:
                             msg3 = "Le courriel n'a pas ete envoye! "
                             send_msg(s, msg3)
 
+                    # Consultation de courriels
                     if (option2 == "2"):
                         objets = []
                         for file in os.listdir(os.getcwd()+"\\"+username):
@@ -108,9 +138,9 @@ while isRunning:
                                 email = open(os.getcwd()+"\\"+username+"\\"+file)
                                 lines = email.readlines()
                                 if lines[2][10:-1] == objets[selectemail]:
-                                    send_msg(s,lines[0][12:-1])
-                                    send_msg(s,lines[1][10:-1])
-                                    send_msg(s,lines[2][10:-1])
+                                    send_msg(s,lines[0])
+                                    send_msg(s,lines[1])
+                                    send_msg(s,lines[2])
                                     #concatenate all remaining lines
                                     body = ""
                                     try:
