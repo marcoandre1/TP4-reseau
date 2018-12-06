@@ -1,26 +1,22 @@
 #!/usr/bin/env python3
 #! -*- coding:utf-8 -*-
 
+"""Script Python qui permet au client d’envoyer et de consulter ses courriels
+    """
+
+__auteur__ = "équipe 22"
+__date__ = "2018-12-05"
+__coequipiers__ = "François-Joseph Lacroix, Marc-André Boulianne, Marco André Echeverria"
+
 import os
 import getpass
 from hashlib import sha256
 import smtplib
 from email.mime.text import MIMEText
 import re
-
-"""Script Python qui implémente l'échange de clé de Diffie-Hellman à l'aide de sockets
-    Mode serveur (exemple): python TP3-Q1.py -s -p 3333
-    Mode client (exemple): python TP3-Q1.py -d localhost -p 3333
-    """
-
-__auteur__ = "équipe 22"
-__date__ = "2018-11-07"
-__coequipiers__ = "François-Joseph Lacroix, Marc-André Boulianne, Marco André Echeverria"
-
 import argparse
 import socket
 import sys
-
 from socketUtil import recv_msg, send_msg
 
 # choisissez l’adresse avec l’option -a et le port avec -p
@@ -74,7 +70,7 @@ while isrunning:
 
                 if (str(optionMenu) == "1"):
                     # remplissage des champs par l’utilisateur
-                    mailfrom = str(username) + "@ulaval.ca"
+                    mailfrom = str(username) + "@reseauglo.ca"
                     send_msg(s, str(mailfrom))
 
                     rcptto = input("Adresse de destination : ")
@@ -98,6 +94,7 @@ while isrunning:
                     print(response)
 
                 if (str(optionMenu) == "2"):
+                    # module qui affiche les messages par sujet
                     print("Consultation de courriels")
                     nbobjets = eval(recv_msg(s))
 
@@ -126,9 +123,27 @@ while isrunning:
                     exit = input()
 
                 if (str(optionMenu) == "3"):
-                    print("Statistiques")
+                    # module qui affiche les messages par sujet
+                    print("Consultation de courriels")
+                    nbobjets = eval(recv_msg(s))
+                    print("Nombre de courriel(s) : "+str(nbobjets))
+
+                    taille = recv_msg(s)
+                    print("Taille en octets : " + str(taille))
+
+                    index = 1
+                    for i in range(nbobjets):
+                        objet = recv_msg(s)
+                        print (str(index) + ". " + objet)
+                        index +=1
+
+                    #taille = recv_msg(s)
+                    #print("Taille en octets : " + str(taille))
+
+                    print("\nPress enter to exit")
+                    exit = input()
+                    
                 if (str(optionMenu) == "4"):
-                    print("Quitter")
                     quitter = True
 
 

@@ -1,11 +1,23 @@
+#!/usr/bin/env python3
+#! -*- coding:utf-8 -*-
+
+"""Script Python qui fonctionne comme un serveur avec relais SMTP qui traite les 
+    envois de courriel à l’externe et à l’interne.
+    """
+
+__auteur__ = "équipe 22"
+__date__ = "2018-12-05"
+__coequipiers__ = "François-Joseph Lacroix, Marc-André Boulianne, Marco André Echeverria"
+
 import optparse
 import re
 import smtplib
 import socket
 import sys
-from socketUtil import *
+from socketUtil import recv_msg, send_msg
 import os
 from email.mime.text import MIMEText
+from os.path import getsize
 
 # choisissez le port avec l’option -p
 parser = optparse.OptionParser()
@@ -118,6 +130,7 @@ while isRunning:
 
                     # Consultation de courriels
                     if (option2 == "2"):
+                        # module qui cherche les messages par sujet
                         objets = []
                         for file in os.listdir(os.getcwd()+"\\"+username):
                             if not file.startswith("config"):
@@ -130,6 +143,7 @@ while isRunning:
                         for objet in objets:
                             send_msg(s,objet)
 
+                        # module qui sélectionne un message de la liste fournie
                         selectemail = eval(recv_msg(s))
                         print (selectemail)
 
@@ -155,9 +169,31 @@ while isRunning:
 
 
                     if (option2 == "3"):
-                        print("Statistiques")
+                        # module qui cherche les messages par sujet
+                        objets3 = []
+                        for file in os.listdir(os.getcwd()+"\\"+username):
+                            if not file.startswith("config"):
+                                email = open(os.getcwd()+"\\"+username+"\\"+file)
+                                lines = email.readlines()
+                                objets3.append(lines[2][10:-1])
+
+                        send_msg(s, str(len(objets3)))
+
+                        # module qui calcule la taille du dossier
+                        objets4 = []
+                        size = 0
+                        for file in os.listdir(os.getcwd()+"\\"+username):
+                            fileSize = getsize(os.getcwd()+"\\"+username+"\\"+file)
+                            size += fileSize
+
+                        globalSize = size
+                        send_msg(s, str(globalSize))
+
+                        # module qui envoie les courriels 1 à 1 au client
+                        for objet in objets3:
+                            send_msg(s,objet)
+                        
                     if (option2 == "4"):
-                        print("Quitter")
                         quitter = True
 
             else:
