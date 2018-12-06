@@ -72,14 +72,14 @@ while isRunning:
                         if re.search(r"[@]reseauglo.ca", rcptto):
                             mailto, domain = rcptto.split("@")
                             if os.path.exists(os.getcwd()+"\\"+mailto):
-                                objets = []
-                                for file in os.listdir(os.getcwd()+"\\"+username):
+                                objets1 = []
+                                for file in os.listdir(os.getcwd()+"\\"+mailto):
                                     if not file.startswith("config"):
-                                        email = open(os.getcwd()+"\\"+username+"\\"+file)
+                                        email = open(os.getcwd()+"\\"+mailto+"\\"+file)
                                         lines = email.readlines()
-                                        objets.append(lines[2][10:-1])
+                                        objets1.append(lines[2][10:-1])
 
-                                userfile = open(os.getcwd()+"\\"+mailto+"\\"+str(len(objets) + 1)+".txt","w")
+                                userfile = open(os.getcwd()+"\\"+mailto+"\\"+str(len(objets1) + 1)+".txt","w")
                                 userfile.write("From : " + mailfrom + "\n")
                                 userfile.write("To : " + rcptto + "\n")
                                 userfile.write("Subject : " + subject + "\n")
@@ -165,9 +165,6 @@ while isRunning:
 
                                     send_msg(s,body)
 
-
-
-
                     if (option2 == "3"):
                         # module qui cherche les messages par sujet
                         objets3 = []
@@ -198,6 +195,7 @@ while isRunning:
 
             else:
                 send_msg(s,"Mauvais mot de passe")
+                send_msg(s,booleanresult)
 
             userfile.close()
         else:

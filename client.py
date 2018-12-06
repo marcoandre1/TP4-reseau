@@ -69,6 +69,7 @@ while isrunning:
 
 
                 if (str(optionMenu) == "1"):
+                    print("Envoi de courriels")
                     # remplissage des champs par l’utilisateur
                     mailfrom = str(username) + "@reseauglo.ca"
                     send_msg(s, str(mailfrom))
@@ -76,7 +77,7 @@ while isrunning:
                     rcptto = input("Adresse de destination : ")
                     # verification courriel est valide
                     while not re.search(r"^[^@]+@[^@]+\.[^@]+$", rcptto):
-                        print("Saisissez une adresse courriel valide : ")
+                        rcptto = input("Saisissez une adresse courriel valide : ")
                     send_msg(s, rcptto)
 
                     subject = input("Sujet du message : ")
@@ -119,12 +120,12 @@ while isrunning:
                     print(recv_msg(s))
                     print(recv_msg(s))
 
-                    print("\nPress enter to exit")
+                    print("Press enter to exit")
                     exit = input()
 
                 if (str(optionMenu) == "3"):
                     # module qui affiche les messages par sujet
-                    print("Consultation de courriels")
+                    print("Statistiques")
                     nbobjets = eval(recv_msg(s))
                     print("Nombre de courriel(s) : "+str(nbobjets))
 
@@ -140,10 +141,11 @@ while isrunning:
                     #taille = recv_msg(s)
                     #print("Taille en octets : " + str(taille))
 
-                    print("\nPress enter to exit")
+                    print("Press enter to exit")
                     exit = input()
                     
                 if (str(optionMenu) == "4"):
+                    print("Quitter")
                     quitter = True
 
 
